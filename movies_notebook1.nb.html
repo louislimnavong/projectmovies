@@ -172,18 +172,48 @@ $(document).ready(function () {
 
 
 <!-- rnb-text-begin -->
-<p>Test for push.</p>
+<p>Below we import the different movies data set.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudG1kYiA8LSByZWFkLmNzdihcIi9Vc2Vycy9sb3Vpc2xpbW5hdm9uZy9EZXNrdG9wL2hvbWV3b3JrL3RtZGIuY3N2XCIpXG5WaWV3KHRtZGIpXG5gYGAifQ== -->
-<pre class="r"><code>tmdb &lt;- read.csv(&quot;/Users/louislimnavong/Desktop/homework/tmdb.csv&quot;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudG1kYiA8LSByZWFkLmNzdihcIi9Vc2Vycy9sb3Vpc2xpbW5hdm9uZy9EZXNrdG9wL2hvbWV3b3JrL3RtZGIuY3N2XCIsc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKSAjIGltcG9ydCBzdHJpbmdzIGFzIGNoYXJhY3RlcnMgXG5WaWV3KHRtZGIpXG5gYGAifQ== -->
+<pre class="r"><code>tmdb &lt;- read.csv(&quot;/Users/louislimnavong/Desktop/homework/tmdb.csv&quot;,stringsAsFactors = FALSE) # import strings as characters 
 View(tmdb)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBHRU5SRVMgQ0xFQU5JTkcgQ09ERSBcbmxpYnJhcnkoZHBseXIpXG5saWJyYXJ5KHRpZHlyKVxudG1kYiA8LSByZWFkLmNzdihcIi9Vc2Vycy9sb3Vpc2xpbW5hdm9uZy9EZXNrdG9wL2hvbWV3b3JrL3RtZGIuY3N2XCIsc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKVxudG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignXCJuYW1lXCInLCBcIlwiLCBnZW5yZXMpKVxudG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignXCJpZFwiJywgXCJcIiwgZ2VucmVzKSlcbnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGNoYXJ0cignfVwiXVt9ezoxMjM0NTY3ODkwJywgJyAgICAgICAgICAgICAgICAgJywgZ2VucmVzKSlcbnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoXCIgXCIsIFwiXCIsIGdlbnJlcykpXG50bWRiIDwtIHRtZGIgJT4lIHNlcGFyYXRlKGdlbnJlcyxpbnRvID0gYyhcIm51bGxcIiwgXCIxXCIsIFwibnVsbDFcIiwgXCIyXCIsIFwibnVsbDJcIiwgXCIzXCIsIFwibnVsbDNcIixcIjRcIixcIm51bGw0XCIsIFwiNVwiLCBcIm51bGw1XCIsIFwiNlwiKSxzZXAgPSAnLCcgLHJlbW92ZSA9IFRSVUUpXG5tb3ZpZXMgPC0gdG1kYltjKDEsMyw1LDcsOSwxMSwxMywxOCldXG5WaWV3KG1vdmllcylcbmBgYCJ9 -->
+<pre class="r"><code># GENRES CLEANING CODE 
+library(dplyr)
+library(tidyr)
+tmdb &lt;- read.csv(&quot;/Users/louislimnavong/Desktop/homework/tmdb.csv&quot;,stringsAsFactors = FALSE)
+tmdb &lt;- tmdb %&gt;% mutate(genres = gsub('&quot;name&quot;', &quot;&quot;, genres))
+tmdb &lt;- tmdb %&gt;% mutate(genres = gsub('&quot;id&quot;', &quot;&quot;, genres))
+tmdb &lt;- tmdb %&gt;% mutate(genres = chartr('}&quot;][}{:1234567890', '                 ', genres))
+tmdb &lt;- tmdb %&gt;% mutate(genres = gsub(&quot; &quot;, &quot;&quot;, genres))
+tmdb &lt;- tmdb %&gt;% separate(genres,into = c(&quot;null&quot;, &quot;1&quot;, &quot;null1&quot;, &quot;2&quot;, &quot;null2&quot;, &quot;3&quot;, &quot;null3&quot;,&quot;4&quot;,&quot;null4&quot;, &quot;5&quot;, &quot;null5&quot;, &quot;6&quot;),sep = ',' ,remove = TRUE)
+movies &lt;- tmdb[c(1,3,5,7,9,11,13,18)]
+View(movies)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZihjKFwiQXZlbmdlcnM6IEFnZSBvZiBVbHRyb25cIixcIk1lbiBpbiBCbGFjayAzXCIpKVxuXG5gYGAifQ== -->
+<pre class="r"><code>f(c(&quot;Avengers: Age of Ultron&quot;,&quot;Men in Black 3&quot;))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDJcbiJ9 -->
+<pre><code>[1] 2</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGVzdCBmb3IgcHVzaC4gCgpgYGB7cn0KdG1kYiA8LSByZWFkLmNzdigiL1VzZXJzL2xvdWlzbGltbmF2b25nL0Rlc2t0b3AvaG9tZXdvcmsvdG1kYi5jc3YiKQpWaWV3KHRtZGIpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKQmVsb3cgd2UgaW1wb3J0IHRoZSBkaWZmZXJlbnQgbW92aWVzIGRhdGEgc2V0LiAKCmBgYHtyfQp0bWRiIDwtIHJlYWQuY3N2KCIvVXNlcnMvbG91aXNsaW1uYXZvbmcvRGVza3RvcC9ob21ld29yay90bWRiLmNzdiIsc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKSAjIGltcG9ydCBzdHJpbmdzIGFzIGNoYXJhY3RlcnMgClZpZXcodG1kYikKYGBgCgpgYGB7cn0KIyBHRU5SRVMgQ0xFQU5JTkcgQ09ERSAKbGlicmFyeShkcGx5cikKbGlicmFyeSh0aWR5cikKdG1kYiA8LSByZWFkLmNzdigiL1VzZXJzL2xvdWlzbGltbmF2b25nL0Rlc2t0b3AvaG9tZXdvcmsvdG1kYi5jc3YiLHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkKdG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignIm5hbWUiJywgIiIsIGdlbnJlcykpCnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoJyJpZCInLCAiIiwgZ2VucmVzKSkKdG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gY2hhcnRyKCd9Il1bfXs6MTIzNDU2Nzg5MCcsICcgICAgICAgICAgICAgICAgICcsIGdlbnJlcykpCnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoIiAiLCAiIiwgZ2VucmVzKSkKdG1kYiA8LSB0bWRiICU+JSBzZXBhcmF0ZShnZW5yZXMsaW50byA9IGMoIm51bGwiLCAiMSIsICJudWxsMSIsICIyIiwgIm51bGwyIiwgIjMiLCAibnVsbDMiLCI0IiwibnVsbDQiLCAiNSIsICJudWxsNSIsICI2Iiksc2VwID0gJywnICxyZW1vdmUgPSBUUlVFKQptb3ZpZXMgPC0gdG1kYltjKDEsMyw1LDcsOSwxMSwxMywxOCldClZpZXcobW92aWVzKQpgYGAKCmBgYHtyfQojIFNDT1JFIEJFVFdFRU4gVFdPIE1PVklFUyBGT1IgVEhFIEdFTlJFUwptYXRyaXhfbW92aWVzIDwtIGFzLm1hdHJpeChtb3ZpZXMpCmYgPC0gZnVuY3Rpb24obmFtZXMpIHsKICBpIDwtIHdoaWNoKG1vdmllcyRvcmlnaW5hbF90aXRsZSA9PSBuYW1lc1sxXSkKICBqIDwtIHdoaWNoKG1vdmllcyRvcmlnaW5hbF90aXRsZSA9PSBuYW1lc1syXSkKICB2ZWN0b3JfbW92aWVzIDwtIGludGVyc2VjdChtYXRyaXhfbW92aWVzW2ksXSxtYXRyaXhfbW92aWVzW2osXSkKICB2ZWN0b3JfbW92aWVzIDwtIHZlY3Rvcl9tb3ZpZXNbIWlzLm5hKHZlY3Rvcl9tb3ZpZXMpXQogIGxlbmd0aCh2ZWN0b3JfbW92aWVzKQp9CmYoYygiQXZlbmdlcnM6IEFnZSBvZiBVbHRyb24iLCJNZW4gaW4gQmxhY2sgMyIpKQpgYGAKYGBge3J9CgpgYGAKCg==</div>
 
 
 

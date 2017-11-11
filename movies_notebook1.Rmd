@@ -3,10 +3,40 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-Test for push. 
+Below we import the different movies data set. 
 
 ```{r}
-tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv")
+tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv",stringsAsFactors = FALSE) # import strings as characters 
 View(tmdb)
+```
+
+```{r}
+# GENRES CLEANING CODE 
+library(dplyr)
+library(tidyr)
+tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv",stringsAsFactors = FALSE)
+tmdb <- tmdb %>% mutate(genres = gsub('"name"', "", genres))
+tmdb <- tmdb %>% mutate(genres = gsub('"id"', "", genres))
+tmdb <- tmdb %>% mutate(genres = chartr('}"][}{:1234567890', '                 ', genres))
+tmdb <- tmdb %>% mutate(genres = gsub(" ", "", genres))
+tmdb <- tmdb %>% separate(genres,into = c("null", "1", "null1", "2", "null2", "3", "null3","4","null4", "5", "null5", "6"),sep = ',' ,remove = TRUE)
+movies <- tmdb[c(1,3,5,7,9,11,13,18)]
+View(movies)
+```
+
+```{r}
+# SCORE BETWEEN TWO MOVIES FOR THE GENRES
+matrix_movies <- as.matrix(movies)
+f <- function(names) {
+  i <- which(movies$original_title == names[1])
+  j <- which(movies$original_title == names[2])
+  vector_movies <- intersect(matrix_movies[i,],matrix_movies[j,])
+  vector_movies <- vector_movies[!is.na(vector_movies)]
+  length(vector_movies)
+}
+f(c("Avengers: Age of Ultron","Men in Black 3"))
+```
+```{r}
+
 ```
 
