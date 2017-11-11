@@ -6,6 +6,7 @@ output: html_notebook
 Below we import the different movies data set. 
 
 ```{r}
+## PATH TO CHANGE 
 tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv",stringsAsFactors = FALSE) # import strings as characters 
 View(tmdb)
 ```
@@ -14,18 +15,19 @@ View(tmdb)
 # GENRES CLEANING CODE 
 library(dplyr)
 library(tidyr)
-tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv",stringsAsFactors = FALSE)
-tmdb <- tmdb %>% mutate(genres = gsub('"name"', "", genres))
-tmdb <- tmdb %>% mutate(genres = gsub('"id"', "", genres))
-tmdb <- tmdb %>% mutate(genres = chartr('}"][}{:1234567890', '                 ', genres))
-tmdb <- tmdb %>% mutate(genres = gsub(" ", "", genres))
-tmdb <- tmdb %>% separate(genres,into = c("null", "1", "null1", "2", "null2", "3", "null3","4","null4", "5", "null5", "6"),sep = ',' ,remove = TRUE)
-movies <- tmdb[c(1,3,5,7,9,11,13,18)]
+tmdb1 <- tmdb 
+tmdb1 <- tmdb1 %>% mutate(genres = gsub('"name"', "", genres))
+tmdb1 <- tmdb1 %>% mutate(genres = gsub('"id"', "", genres))
+tmdb1 <- tmdb1 %>% mutate(genres = chartr('}"][}{:1234567890', '                 ', genres))
+tmdb1 <- tmdb1 %>% mutate(genres = gsub(" ", "", genres))
+tmdb1 <- tmdb1 %>% separate(genres,into = c("null", "1", "null1", "2", "null2", "3", "null3","4","null4", "5", "null5", "6"),sep = ',' ,remove = TRUE)
+movies <- tmdb1[c(1,3,5,7,9,11,13,18)]
 View(movies)
 ```
 
 ```{r}
 # SCORE BETWEEN TWO MOVIES FOR THE GENRES
+
 matrix_movies <- as.matrix(movies)
 f <- function(names) {
   i <- which(movies$original_title == names[1])
@@ -37,6 +39,23 @@ f <- function(names) {
 f(c("Avengers: Age of Ultron","Men in Black 3"))
 ```
 ```{r}
+# Keywords CLEANING CODE 
+## PATH TO CHANGE 
+
+
+tmp <- c(1:80)
+tmp <- as.character(tmp)
+
+#tmdb2 <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE)
+tmdb2 <- tmdb # modify the code so we don't make changes on the data set directly 
+tmdb2 <- tmdb2 %>% mutate(keywords = gsub('"name"', "", keywords))
+tmdb2 <- tmdb2 %>% mutate(keywords = gsub('"id"', "", keywords))
+tmdb2 <- tmdb2 %>% mutate(keywords = chartr('}"][}{:1234567890', '                 ', keywords))
+tmdb2 <- tmdb2 %>% mutate(keywords = gsub(" ", "", keywords))
+tmdb2 <- tmdb2[c(1,5,7,9,11,13,18)]
+tmdb2 <- tmdb2 %>% separate(keywords,into = tmp ,sep = ',' ,remove = TRUE)
+movies2 <- tmdb2[c(seq(1, 80, by=2))]
+View(movies2)
 
 ```
 

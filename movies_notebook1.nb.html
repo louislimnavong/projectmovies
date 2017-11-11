@@ -183,17 +183,22 @@ View(tmdb)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBHRU5SRVMgQ0xFQU5JTkcgQ09ERSBcbmxpYnJhcnkoZHBseXIpXG5saWJyYXJ5KHRpZHlyKVxudG1kYiA8LSByZWFkLmNzdihcIi9Vc2Vycy9sb3Vpc2xpbW5hdm9uZy9EZXNrdG9wL2hvbWV3b3JrL3RtZGIuY3N2XCIsc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKVxudG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignXCJuYW1lXCInLCBcIlwiLCBnZW5yZXMpKVxudG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignXCJpZFwiJywgXCJcIiwgZ2VucmVzKSlcbnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGNoYXJ0cignfVwiXVt9ezoxMjM0NTY3ODkwJywgJyAgICAgICAgICAgICAgICAgJywgZ2VucmVzKSlcbnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoXCIgXCIsIFwiXCIsIGdlbnJlcykpXG50bWRiIDwtIHRtZGIgJT4lIHNlcGFyYXRlKGdlbnJlcyxpbnRvID0gYyhcIm51bGxcIiwgXCIxXCIsIFwibnVsbDFcIiwgXCIyXCIsIFwibnVsbDJcIiwgXCIzXCIsIFwibnVsbDNcIixcIjRcIixcIm51bGw0XCIsIFwiNVwiLCBcIm51bGw1XCIsIFwiNlwiKSxzZXAgPSAnLCcgLHJlbW92ZSA9IFRSVUUpXG5tb3ZpZXMgPC0gdG1kYltjKDEsMyw1LDcsOSwxMSwxMywxOCldXG5WaWV3KG1vdmllcylcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBHRU5SRVMgQ0xFQU5JTkcgQ09ERSBcbmxpYnJhcnkoZHBseXIpXG5saWJyYXJ5KHRpZHlyKVxudG1kYjEgPC0gdG1kYiBcbnRtZGIxIDwtIHRtZGIxICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignXCJuYW1lXCInLCBcIlwiLCBnZW5yZXMpKVxudG1kYjEgPC0gdG1kYjEgJT4lIG11dGF0ZShnZW5yZXMgPSBnc3ViKCdcImlkXCInLCBcIlwiLCBnZW5yZXMpKVxudG1kYjEgPC0gdG1kYjEgJT4lIG11dGF0ZShnZW5yZXMgPSBjaGFydHIoJ31cIl1bfXs6MTIzNDU2Nzg5MCcsICcgICAgICAgICAgICAgICAgICcsIGdlbnJlcykpXG50bWRiMSA8LSB0bWRiMSAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoXCIgXCIsIFwiXCIsIGdlbnJlcykpXG50bWRiMSA8LSB0bWRiMSAlPiUgc2VwYXJhdGUoZ2VucmVzLGludG8gPSBjKFwibnVsbFwiLCBcIjFcIiwgXCJudWxsMVwiLCBcIjJcIiwgXCJudWxsMlwiLCBcIjNcIiwgXCJudWxsM1wiLFwiNFwiLFwibnVsbDRcIiwgXCI1XCIsIFwibnVsbDVcIiwgXCI2XCIpLHNlcCA9ICcsJyAscmVtb3ZlID0gVFJVRSlcbmBgYCJ9 -->
 <pre class="r"><code># GENRES CLEANING CODE 
 library(dplyr)
 library(tidyr)
-tmdb &lt;- read.csv(&quot;/Users/louislimnavong/Desktop/homework/tmdb.csv&quot;,stringsAsFactors = FALSE)
-tmdb &lt;- tmdb %&gt;% mutate(genres = gsub('&quot;name&quot;', &quot;&quot;, genres))
-tmdb &lt;- tmdb %&gt;% mutate(genres = gsub('&quot;id&quot;', &quot;&quot;, genres))
-tmdb &lt;- tmdb %&gt;% mutate(genres = chartr('}&quot;][}{:1234567890', '                 ', genres))
-tmdb &lt;- tmdb %&gt;% mutate(genres = gsub(&quot; &quot;, &quot;&quot;, genres))
-tmdb &lt;- tmdb %&gt;% separate(genres,into = c(&quot;null&quot;, &quot;1&quot;, &quot;null1&quot;, &quot;2&quot;, &quot;null2&quot;, &quot;3&quot;, &quot;null3&quot;,&quot;4&quot;,&quot;null4&quot;, &quot;5&quot;, &quot;null5&quot;, &quot;6&quot;),sep = ',' ,remove = TRUE)
-movies &lt;- tmdb[c(1,3,5,7,9,11,13,18)]
+tmdb1 &lt;- tmdb 
+tmdb1 &lt;- tmdb1 %&gt;% mutate(genres = gsub('&quot;name&quot;', &quot;&quot;, genres))
+tmdb1 &lt;- tmdb1 %&gt;% mutate(genres = gsub('&quot;id&quot;', &quot;&quot;, genres))
+tmdb1 &lt;- tmdb1 %&gt;% mutate(genres = chartr('}&quot;][}{:1234567890', '                 ', genres))
+tmdb1 &lt;- tmdb1 %&gt;% mutate(genres = gsub(&quot; &quot;, &quot;&quot;, genres))
+tmdb1 &lt;- tmdb1 %&gt;% separate(genres,into = c(&quot;null&quot;, &quot;1&quot;, &quot;null1&quot;, &quot;2&quot;, &quot;null2&quot;, &quot;3&quot;, &quot;null3&quot;,&quot;4&quot;,&quot;null4&quot;, &quot;5&quot;, &quot;null5&quot;, &quot;6&quot;),sep = ',' ,remove = TRUE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiVG9vIG1hbnkgdmFsdWVzIGF0IDQgbG9jYXRpb25zOiAxODI2LCAyMzQ3LCAyNjgyLCAyODI4VG9vIGZldyB2YWx1ZXMgYXQgNDc2NiBsb2NhdGlvbnM6IDEsIDIsIDMsIDQsIDUsIDYsIDcsIDgsIDksIDEwLCAxMSwgMTIsIDEzLCAxNCwgMTUsIDE2LCAxNywgMTgsIDE5LCAyMCwgLi4uXG4ifQ== -->
+<pre><code>Too many values at 4 locations: 1826, 2347, 2682, 2828Too few values at 4766 locations: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzIDwtIHRtZGIxW2MoMSwzLDUsNyw5LDExLDEzLDE4KV1cblZpZXcobW92aWVzKVxuYGBgIn0= -->
+<pre class="r"><code>movies &lt;- tmdb1[c(1,3,5,7,9,11,13,18)]
 View(movies)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
@@ -209,11 +214,31 @@ View(movies)</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBLZXl3b3JkcyBDTEVBTklORyBDT0RFIFxuIyMgUEFUSCBUTyBDSEFOR0UgXG50bXAgPC0gYygxOjgwKVxudG1wIDwtIGFzLmNoYXJhY3Rlcih0bXApXG4jdG1kYjIgPC0gcmVhZC5jc3YoXCIvVXNlcnMvRGFuaWVsL0RvY3VtZW50cy9Db3Vyc2VzIFgvUi9Qcm9qZWN0L3RtZGItNTAwMC1tb3ZpZS1kYXRhc2V0L3RtZGJfNTAwMF9tb3ZpZXMuY3N2XCIsc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKVxudG1kYjIgPC0gdG1kYiAjIG1vZGlmeSB0aGUgY29kZSBzbyB3ZSBkb24ndCBtYWtlIGNoYW5nZXMgb24gdGhlIGRhdGEgc2V0IGRpcmVjdGx5IFxudG1kYjIgPC0gdG1kYjIgJT4lIG11dGF0ZShrZXl3b3JkcyA9IGdzdWIoJ1wibmFtZVwiJywgXCJcIiwga2V5d29yZHMpKVxudG1kYjIgPC0gdG1kYjIgJT4lIG11dGF0ZShrZXl3b3JkcyA9IGdzdWIoJ1wiaWRcIicsIFwiXCIsIGtleXdvcmRzKSlcbnRtZGIyIDwtIHRtZGIyICU+JSBtdXRhdGUoa2V5d29yZHMgPSBjaGFydHIoJ31cIl1bfXs6MTIzNDU2Nzg5MCcsICcgICAgICAgICAgICAgICAgICcsIGtleXdvcmRzKSlcbnRtZGIyIDwtIHRtZGIyICU+JSBtdXRhdGUoa2V5d29yZHMgPSBnc3ViKFwiIFwiLCBcIlwiLCBrZXl3b3JkcykpXG50bWRiMiA8LSB0bWRiMltjKDEsNSw3LDksMTEsMTMsMTgpXVxudG1kYjIgPC0gdG1kYjIgJT4lIHNlcGFyYXRlKGtleXdvcmRzLGludG8gPSB0bXAgLHNlcCA9ICcsJyAscmVtb3ZlID0gVFJVRSlcbmBgYCJ9 -->
+<pre class="r"><code># Keywords CLEANING CODE 
+## PATH TO CHANGE 
+tmp &lt;- c(1:80)
+tmp &lt;- as.character(tmp)
+#tmdb2 &lt;- read.csv(&quot;/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv&quot;,stringsAsFactors = FALSE)
+tmdb2 &lt;- tmdb # modify the code so we don't make changes on the data set directly 
+tmdb2 &lt;- tmdb2 %&gt;% mutate(keywords = gsub('&quot;name&quot;', &quot;&quot;, keywords))
+tmdb2 &lt;- tmdb2 %&gt;% mutate(keywords = gsub('&quot;id&quot;', &quot;&quot;, keywords))
+tmdb2 &lt;- tmdb2 %&gt;% mutate(keywords = chartr('}&quot;][}{:1234567890', '                 ', keywords))
+tmdb2 &lt;- tmdb2 %&gt;% mutate(keywords = gsub(&quot; &quot;, &quot;&quot;, keywords))
+tmdb2 &lt;- tmdb2[c(1,5,7,9,11,13,18)]
+tmdb2 &lt;- tmdb2 %&gt;% separate(keywords,into = tmp ,sep = ',' ,remove = TRUE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiVG9vIG1hbnkgdmFsdWVzIGF0IDUgbG9jYXRpb25zOiAxMTM0LCAxNjk3LCAyMjE4LCAyNDI5LCAyNDQzVG9vIGZldyB2YWx1ZXMgYXQgNDc5NyBsb2NhdGlvbnM6IDEsIDIsIDMsIDQsIDUsIDYsIDcsIDgsIDksIDEwLCAxMSwgMTIsIDEzLCAxNCwgMTUsIDE2LCAxNywgMTgsIDE5LCAyMCwgLi4uXG4ifQ== -->
+<pre><code>Too many values at 5 locations: 1134, 1697, 2218, 2429, 2443Too few values at 4797 locations: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzMiA8LSB0bWRiMltjKHNlcSgxLCA4MCwgYnk9MikpXVxuYGBgIn0= -->
+<pre class="r"><code>movies2 &lt;- tmdb2[c(seq(1, 80, by=2))]</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKQmVsb3cgd2UgaW1wb3J0IHRoZSBkaWZmZXJlbnQgbW92aWVzIGRhdGEgc2V0LiAKCmBgYHtyfQp0bWRiIDwtIHJlYWQuY3N2KCIvVXNlcnMvbG91aXNsaW1uYXZvbmcvRGVza3RvcC9ob21ld29yay90bWRiLmNzdiIsc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKSAjIGltcG9ydCBzdHJpbmdzIGFzIGNoYXJhY3RlcnMgClZpZXcodG1kYikKYGBgCgpgYGB7cn0KIyBHRU5SRVMgQ0xFQU5JTkcgQ09ERSAKbGlicmFyeShkcGx5cikKbGlicmFyeSh0aWR5cikKdG1kYiA8LSByZWFkLmNzdigiL1VzZXJzL2xvdWlzbGltbmF2b25nL0Rlc2t0b3AvaG9tZXdvcmsvdG1kYi5jc3YiLHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkKdG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignIm5hbWUiJywgIiIsIGdlbnJlcykpCnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoJyJpZCInLCAiIiwgZ2VucmVzKSkKdG1kYiA8LSB0bWRiICU+JSBtdXRhdGUoZ2VucmVzID0gY2hhcnRyKCd9Il1bfXs6MTIzNDU2Nzg5MCcsICcgICAgICAgICAgICAgICAgICcsIGdlbnJlcykpCnRtZGIgPC0gdG1kYiAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoIiAiLCAiIiwgZ2VucmVzKSkKdG1kYiA8LSB0bWRiICU+JSBzZXBhcmF0ZShnZW5yZXMsaW50byA9IGMoIm51bGwiLCAiMSIsICJudWxsMSIsICIyIiwgIm51bGwyIiwgIjMiLCAibnVsbDMiLCI0IiwibnVsbDQiLCAiNSIsICJudWxsNSIsICI2Iiksc2VwID0gJywnICxyZW1vdmUgPSBUUlVFKQptb3ZpZXMgPC0gdG1kYltjKDEsMyw1LDcsOSwxMSwxMywxOCldClZpZXcobW92aWVzKQpgYGAKCmBgYHtyfQojIFNDT1JFIEJFVFdFRU4gVFdPIE1PVklFUyBGT1IgVEhFIEdFTlJFUwptYXRyaXhfbW92aWVzIDwtIGFzLm1hdHJpeChtb3ZpZXMpCmYgPC0gZnVuY3Rpb24obmFtZXMpIHsKICBpIDwtIHdoaWNoKG1vdmllcyRvcmlnaW5hbF90aXRsZSA9PSBuYW1lc1sxXSkKICBqIDwtIHdoaWNoKG1vdmllcyRvcmlnaW5hbF90aXRsZSA9PSBuYW1lc1syXSkKICB2ZWN0b3JfbW92aWVzIDwtIGludGVyc2VjdChtYXRyaXhfbW92aWVzW2ksXSxtYXRyaXhfbW92aWVzW2osXSkKICB2ZWN0b3JfbW92aWVzIDwtIHZlY3Rvcl9tb3ZpZXNbIWlzLm5hKHZlY3Rvcl9tb3ZpZXMpXQogIGxlbmd0aCh2ZWN0b3JfbW92aWVzKQp9CmYoYygiQXZlbmdlcnM6IEFnZSBvZiBVbHRyb24iLCJNZW4gaW4gQmxhY2sgMyIpKQpgYGAKYGBge3J9CgpgYGAKCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKQmVsb3cgd2UgaW1wb3J0IHRoZSBkaWZmZXJlbnQgbW92aWVzIGRhdGEgc2V0LiAKCmBgYHtyfQojIyBQQVRIIFRPIENIQU5HRSAKdG1kYiA8LSByZWFkLmNzdigiL1VzZXJzL2xvdWlzbGltbmF2b25nL0Rlc2t0b3AvaG9tZXdvcmsvdG1kYi5jc3YiLHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkgIyBpbXBvcnQgc3RyaW5ncyBhcyBjaGFyYWN0ZXJzIApWaWV3KHRtZGIpCmBgYAoKYGBge3J9CiMgR0VOUkVTIENMRUFOSU5HIENPREUgCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkodGlkeXIpCnRtZGIxIDwtIHRtZGIgCnRtZGIxIDwtIHRtZGIxICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignIm5hbWUiJywgIiIsIGdlbnJlcykpCnRtZGIxIDwtIHRtZGIxICU+JSBtdXRhdGUoZ2VucmVzID0gZ3N1YignImlkIicsICIiLCBnZW5yZXMpKQp0bWRiMSA8LSB0bWRiMSAlPiUgbXV0YXRlKGdlbnJlcyA9IGNoYXJ0cignfSJdW317OjEyMzQ1Njc4OTAnLCAnICAgICAgICAgICAgICAgICAnLCBnZW5yZXMpKQp0bWRiMSA8LSB0bWRiMSAlPiUgbXV0YXRlKGdlbnJlcyA9IGdzdWIoIiAiLCAiIiwgZ2VucmVzKSkKdG1kYjEgPC0gdG1kYjEgJT4lIHNlcGFyYXRlKGdlbnJlcyxpbnRvID0gYygibnVsbCIsICIxIiwgIm51bGwxIiwgIjIiLCAibnVsbDIiLCAiMyIsICJudWxsMyIsIjQiLCJudWxsNCIsICI1IiwgIm51bGw1IiwgIjYiKSxzZXAgPSAnLCcgLHJlbW92ZSA9IFRSVUUpCm1vdmllcyA8LSB0bWRiMVtjKDEsMyw1LDcsOSwxMSwxMywxOCldClZpZXcobW92aWVzKQpgYGAKCmBgYHtyfQojIFNDT1JFIEJFVFdFRU4gVFdPIE1PVklFUyBGT1IgVEhFIEdFTlJFUwoKbWF0cml4X21vdmllcyA8LSBhcy5tYXRyaXgobW92aWVzKQpmIDwtIGZ1bmN0aW9uKG5hbWVzKSB7CiAgaSA8LSB3aGljaChtb3ZpZXMkb3JpZ2luYWxfdGl0bGUgPT0gbmFtZXNbMV0pCiAgaiA8LSB3aGljaChtb3ZpZXMkb3JpZ2luYWxfdGl0bGUgPT0gbmFtZXNbMl0pCiAgdmVjdG9yX21vdmllcyA8LSBpbnRlcnNlY3QobWF0cml4X21vdmllc1tpLF0sbWF0cml4X21vdmllc1tqLF0pCiAgdmVjdG9yX21vdmllcyA8LSB2ZWN0b3JfbW92aWVzWyFpcy5uYSh2ZWN0b3JfbW92aWVzKV0KICBsZW5ndGgodmVjdG9yX21vdmllcykKfQpmKGMoIkF2ZW5nZXJzOiBBZ2Ugb2YgVWx0cm9uIiwiTWVuIGluIEJsYWNrIDMiKSkKYGBgCmBgYHtyfQojIEtleXdvcmRzIENMRUFOSU5HIENPREUgCiMjIFBBVEggVE8gQ0hBTkdFIAoKCnRtcCA8LSBjKDE6ODApCnRtcCA8LSBhcy5jaGFyYWN0ZXIodG1wKQoKI3RtZGIyIDwtIHJlYWQuY3N2KCIvVXNlcnMvRGFuaWVsL0RvY3VtZW50cy9Db3Vyc2VzIFgvUi9Qcm9qZWN0L3RtZGItNTAwMC1tb3ZpZS1kYXRhc2V0L3RtZGJfNTAwMF9tb3ZpZXMuY3N2IixzdHJpbmdzQXNGYWN0b3JzID0gRkFMU0UpCnRtZGIyIDwtIHRtZGIgIyBtb2RpZnkgdGhlIGNvZGUgc28gd2UgZG9uJ3QgbWFrZSBjaGFuZ2VzIG9uIHRoZSBkYXRhIHNldCBkaXJlY3RseSAKdG1kYjIgPC0gdG1kYjIgJT4lIG11dGF0ZShrZXl3b3JkcyA9IGdzdWIoJyJuYW1lIicsICIiLCBrZXl3b3JkcykpCnRtZGIyIDwtIHRtZGIyICU+JSBtdXRhdGUoa2V5d29yZHMgPSBnc3ViKCciaWQiJywgIiIsIGtleXdvcmRzKSkKdG1kYjIgPC0gdG1kYjIgJT4lIG11dGF0ZShrZXl3b3JkcyA9IGNoYXJ0cignfSJdW317OjEyMzQ1Njc4OTAnLCAnICAgICAgICAgICAgICAgICAnLCBrZXl3b3JkcykpCnRtZGIyIDwtIHRtZGIyICU+JSBtdXRhdGUoa2V5d29yZHMgPSBnc3ViKCIgIiwgIiIsIGtleXdvcmRzKSkKdG1kYjIgPC0gdG1kYjJbYygxLDUsNyw5LDExLDEzLDE4KV0KdG1kYjIgPC0gdG1kYjIgJT4lIHNlcGFyYXRlKGtleXdvcmRzLGludG8gPSB0bXAgLHNlcCA9ICcsJyAscmVtb3ZlID0gVFJVRSkKbW92aWVzMiA8LSB0bWRiMltjKHNlcSgxLCA4MCwgYnk9MikpXQpWaWV3KG1vdmllczIpCgpgYGAKCg==</div>
 
 
 
