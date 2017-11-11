@@ -59,3 +59,11 @@ View(movies2)
 
 ```
 
+```{r}
+# Score for the keywords (to be replaced by the function)
+matrix_movies2 <- as.matrix(movies2)
+keywords_similarity <- intersect(matrix_movies2[4,],matrix_movies2[15,])
+keywords_similarity <- keywords_similarity[!is.na(keywords_similarity)]
+length(keywords_similarity)
+```
+
