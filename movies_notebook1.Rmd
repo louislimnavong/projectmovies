@@ -6,6 +6,7 @@ output: html_notebook
 Test for push. 
 
 ```{r}
-
+tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv")
+View(tmdb)
 ```
 
