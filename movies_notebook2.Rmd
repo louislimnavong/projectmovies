@@ -7,8 +7,11 @@ Below we import the different movies data set.
 
 ```{r}
 ## PATH TO CHANGE 
-tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv",stringsAsFactors = FALSE) # import strings as characters 
+tmdb <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE) # import strings as characters 
 View(tmdb)
+tmdb<-tmdb[-c(382,294,168,345,72,313,318,303,458,84,444,87,493,437,324), ]
+#These rows are deleted due to a lack of keywords with other movies
+
 ```
 
 ```{r}
@@ -83,27 +86,6 @@ score_total <- function(i,j) {
   result = score_key(i,j) + score_genre(i,j)
 }
 
-```
-```{r}
-weight <- function(i,j) {
-  if (i>= j) {
-    result = NA
-  }
-  else {
-    if (score_key(i,j) == 0 | score_key(i,j) == 1) {
-      if (score_genre(i,j) != 0) {
-        result = 100
-      }
-      else {
-        result = 0 }
-    }
-    else {
-    result = 1/(score_total(i,j))
-    }
-  }
-    print(result)
-}
-weight(20,23)
 ```
 
 ```{r}
@@ -200,23 +182,11 @@ movies_path <- function(names) {
   
 }
 
-movies_character <- function(names) {
-  i <- which(movies2$original_title == names[1])
-  j <- which(movies2$original_title == names[2])
-  l <- shortest_paths(graph, i,j)
-  l1 <- l[[1]][[1]]
-  movies_list <- list()
-  for (i in 1:length(l1)){
-    movies_list[[i]] <- tmdb$original_title[l1[i]]
-  }
-  result = as.character(movies_list)
-  print(result)
-  
-}
+
 class(movies_path(c("Avatar","Tangled")))
 movies_path(c("Avatar","Tangled"))
 
-movies_character(c("Avatar","Tangled"))
+
 
 
 ```
