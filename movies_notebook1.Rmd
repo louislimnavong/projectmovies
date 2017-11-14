@@ -178,7 +178,7 @@ similarities_genre(c("The Dark Knight Rises","Superman Returns"))
 
 
 ```{r}
-# TEST the function shortest_paths
+# TEST the function shortest_paths: we want to understand the way it works with weighted graphs
 m <- outer(seq(1,3),seq(1,3),"+")
 diag(m) = 0
 m[2,1] = NA
@@ -192,7 +192,7 @@ g <- graph_from_adjacency_matrix(m,mode = c("undirected"), weighted = T)
 plot(g)
 library(igraph)
 shortest_paths(g,1,2)
-distances(g,2,1)
+distances(g,2,1) 
 ```
 
 
