@@ -1,10 +1,9 @@
-
-
+library(shinythemes)
 library(shiny)
 library(DT)
 
 
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("sandstone"),
   
   titlePanel("Movies Recommendation Path"),
   
