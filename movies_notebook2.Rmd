@@ -1,0 +1,271 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Below we import the different movies data set. 
+
+```{r}
+## PATH TO CHANGE 
+tmdb <- read.csv("/Users/louislimnavong/Desktop/homework/tmdb.csv",stringsAsFactors = FALSE) # import strings as characters 
+View(tmdb)
+```
+
+```{r}
+# GENRES CLEANING CODE 
+library(dplyr)
+library(tidyr)
+tmdb1 <- tmdb 
+tmdb1 <- tmdb1 %>% mutate(genres = gsub('"name"', "", genres))
+tmdb1 <- tmdb1 %>% mutate(genres = gsub('"id"', "", genres))
+tmdb1 <- tmdb1 %>% mutate(genres = chartr('}"][}{:1234567890', '                 ', genres))
+tmdb1 <- tmdb1 %>% mutate(genres = gsub(" ", "", genres))
+tmdb1 <- tmdb1 %>% separate(genres,into = c("null", "1", "null1", "2", "null2", "3", "null3","4","null4", "5", "null5", "6"),sep = ',' ,remove = TRUE)
+movies <- tmdb1[c(1,3,5,7,9,11,13,18)]
+movies <- movies[-1]
+View(movies)
+
+matrix_movies <- as.matrix(movies)
+```
+
+
+```{r}
+# Keywords CLEANING CODE 
+## PATH TO CHANGE 
+### Comment : what is the keyword "d" ? 
+### No column with the title ? 
+
+
+# Keywords CLEANING CODE 
+tmp <- c(1:40)
+tmp <- as.character(tmp)
+
+#tmdb2 <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE)
+tmdb2 <- tmdb %>% mutate(keywords = gsub('"name"', "", keywords))
+tmdb2 <- tmdb2 %>% mutate(keywords = gsub('"id"', "", keywords))
+tmdb2 <- tmdb2 %>% mutate(keywords = chartr('}"][}{:1234567890', '                 ', keywords))
+tmdb2 <- tmdb2 %>% mutate(keywords = gsub(" ", "", keywords))
+tmdb2 <- tmdb2[c(5,7,9,11,13,18)]
+tmdb2 <- tmdb2 %>% separate(keywords,into = tmp ,sep = ',' ,remove = TRUE)
+movies2 <- tmdb2[c(seq(2, 41, by=2))]
+movies2$original_title<-tmdb2$original_title
+View(movies2)
+
+matrix_movies2 <- as.matrix(movies2)
+matrix_movies2[ matrix_movies2 == "d" ] <- NA
+```
+
+
+
+```{r}
+# Score function 
+
+score_genre <- function(i,j) {
+  vector_movies <- intersect(matrix_movies[i,],matrix_movies[j,])
+  vector_movies <- vector_movies[!is.na(vector_movies)]
+  if  (length(vector_movies) != 0){
+    result = length(vector_movies)
+    }
+  else {
+    result = 0 
+  }
+}
+
+score_key <- function(i,j) {
+  vector_movies <- intersect(matrix_movies2[i,],matrix_movies2[j,])
+  vector_movies <- vector_movies[!is.na(vector_movies)]
+  length(vector_movies)
+}
+
+score_key(3,23)
+
+score_total <- function(i,j) {
+  result = score_key(i,j) + score_genre(i,j)
+}
+
+```
+```{r}
+weight <- function(i,j) {
+  if (i>= j) {
+    result = NA
+  }
+  else {
+    if (score_key(i,j) == 0 | score_key(i,j) == 1) {
+      if (score_genre(i,j) != 0) {
+        result = 100
+      }
+      else {
+        result = 0 }
+    }
+    else {
+    result = 1/(score_total(i,j))
+    }
+  }
+    print(result)
+}
+weight(20,23)
+```
+
+```{r}
+weight <- function(i,j) {
+  if (i>= j) {
+    result = NA
+  }
+  else {
+    if (score_key(i,j) == 0) {
+      if (score_genre(i,j) != 0) {
+        result = 0
+      }
+      else {
+        result = 0 }
+    }
+    else {
+    result = 1/(score_total(i,j))
+    }
+  }
+    print(result)
+}
+weight(20,23)
+```
+
+```{r}
+library(igraph)
+
+VecWeight <- Vectorize( weight )
+
+graph_matrix <- outer(seq(1,500),seq(1,500),VecWeight) 
+diag(graph_matrix) = 0 
+#View(graph_matrix)
+
+movies_used <- movies[1:500,]
+
+
+graph <- graph_from_adjacency_matrix(graph_matrix, mode = c("undirected"), weighted = T)
+plot(graph)
+
+shortest_paths(graph, 3, 20)
+distances(graph,3,20)
+tmdb$original_title[[87]]
+intersect(matrix_movies[26,],matrix_movies[4,])
+intersect(matrix_movies2[12,],matrix_movies2[19,])
+
+
+```
+
+```{r}
+# need to put movies_used in the other functions
+movies_used <- movies[1:500,]
+movies_used <- movies_used[-87,]
+View(movies_used)
+```
+
+```{r}
+# Runtime 
+start_time <- Sys.time()
+graph_matrix <- outer(seq(1,200),seq(1,200),VecWeight) 
+end_time <- Sys.time()
+end_time - start_time
+```
+
+```{r}
+
+# Get the movie path as a character 
+
+movies_path <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  l <- shortest_paths(graph, i,j)
+  l1 <- l[[1]][[1]]
+  movies_list <- list()
+  for (i in 1:length(l1)){
+    movies_list[[i]] <- tmdb$original_title[l1[i]]
+  }
+  #result = movies_list
+  print(movies_list)
+  
+}
+
+movies_path <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  l <- shortest_paths(graph, i,j)
+  l1 <- l[[1]][[1]]
+  movies_list <- list()
+  for (i in 1:length(l1)){
+    movies_list[[i]] <- tmdb$original_title[l1[i]]
+  }
+  movies_list <- do.call(rbind.data.frame, movies_list)
+  colnames(movies_list) <- c("Pathway from movie 1 to movie 2")
+  print(movies_list)
+  
+}
+
+movies_character <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  l <- shortest_paths(graph, i,j)
+  l1 <- l[[1]][[1]]
+  movies_list <- list()
+  for (i in 1:length(l1)){
+    movies_list[[i]] <- tmdb$original_title[l1[i]]
+  }
+  result = as.character(movies_list)
+  print(result)
+  
+}
+class(movies_path(c("Avatar","Tangled")))
+movies_path(c("Avatar","Tangled"))
+
+movies_character(c("Avatar","Tangled"))
+
+
+```
+
+```{r}
+
+similarities_key <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  keywords <- intersect(matrix_movies2[i,],matrix_movies2[j,])
+  keywords <- keywords[!is.na(keywords)]
+  print(paste(keywords))
+  
+  
+}
+similarities_key(c("The Dark Knight Rises","Superman Returns"))
+
+similarities_genre <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  genre <- intersect(matrix_movies[i,],matrix_movies[j,])
+  genre <- genre[!is.na(genre)]
+  print(paste(genre))
+  
+  
+}
+similarities_genre(c("The Dark Knight Rises","Superman Returns"))
+
+```
+
+
+```{r}
+# TEST the function shortest_paths
+m <- outer(seq(1,3),seq(1,3),"+")
+diag(m) = 0
+m[2,1] = NA
+m[1,2] = 10
+m[3,1] = 2
+m[1,3] = 2
+m[3,2] = 2
+m[2,3] = 2
+m
+g <- graph_from_adjacency_matrix(m,mode = c("undirected"), weighted = T)
+plot(g)
+library(igraph)
+shortest_paths(g,1,2)
+distances(g,2,1)
+```
+
+
+
+
