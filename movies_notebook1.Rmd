@@ -7,7 +7,7 @@ Below we import the different movies data set.
 
 ```{r}
 ## PATH TO CHANGE 
-tmdb <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE) # import strings as characters
+tmdb <- read.csv("/Users/agirelli/Desktop/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE) # import strings as characters 
 View(tmdb)
 ```
 
@@ -22,22 +22,13 @@ tmdb1 <- tmdb1 %>% mutate(genres = chartr('}"][}{:1234567890', '                
 tmdb1 <- tmdb1 %>% mutate(genres = gsub(" ", "", genres))
 tmdb1 <- tmdb1 %>% separate(genres,into = c("null", "1", "null1", "2", "null2", "3", "null3","4","null4", "5", "null5", "6"),sep = ',' ,remove = TRUE)
 movies <- tmdb1[c(1,3,5,7,9,11,13,18)]
+movies <- movies[-1]
 View(movies)
-```
-
-```{r}
-# SCORE BETWEEN TWO MOVIES FOR THE GENRES
 
 matrix_movies <- as.matrix(movies)
-f <- function(names) {
-  i <- which(movies$original_title == names[1])
-  j <- which(movies$original_title == names[2])
-  vector_movies <- intersect(matrix_movies[i,],matrix_movies[j,])
-  vector_movies <- vector_movies[!is.na(vector_movies)]
-  length(vector_movies)
-}
-f(c("Avengers: Age of Ultron","Men in Black 3"))
 ```
+
+
 ```{r}
 # Keywords CLEANING CODE 
 ## PATH TO CHANGE 
@@ -45,28 +36,164 @@ f(c("Avengers: Age of Ultron","Men in Black 3"))
 ### No column with the title ? 
 
 
-tmp <- c(1:80)
+# Keywords CLEANING CODE 
+tmp <- c(1:40)
 tmp <- as.character(tmp)
 
 #tmdb2 <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE)
-tmdb2 <- tmdb # modify the code so we don't make changes on the data set directly 
-tmdb2 <- tmdb2 %>% mutate(keywords = gsub('"name"', "", keywords))
+tmdb2 <- tmdb %>% mutate(keywords = gsub('"name"', "", keywords))
 tmdb2 <- tmdb2 %>% mutate(keywords = gsub('"id"', "", keywords))
 tmdb2 <- tmdb2 %>% mutate(keywords = chartr('}"][}{:1234567890', '                 ', keywords))
 tmdb2 <- tmdb2 %>% mutate(keywords = gsub(" ", "", keywords))
-tmdb2 <- tmdb2[c(1,5,7,9,11,13,18)]
+tmdb2 <- tmdb2[c(5,7,9,11,13,18)]
 tmdb2 <- tmdb2 %>% separate(keywords,into = tmp ,sep = ',' ,remove = TRUE)
-movies2 <- tmdb2[c(seq(1, 80, by=2))]
+movies2 <- tmdb2[c(seq(2, 41, by=2))]
+movies2$original_title<-tmdb2$original_title
 View(movies2)
+
+matrix_movies2 <- as.matrix(movies2)
+matrix_movies2[ matrix_movies2 == "d" ] <- NA
+```
+
+
+
+```{r}
+# Score function 
+
+score_genre <- function(i,j) {
+  vector_movies <- intersect(matrix_movies[i,],matrix_movies[j,])
+  vector_movies <- vector_movies[!is.na(vector_movies)]
+  if  (length(vector_movies) != 0){
+    result = length(vector_movies)
+    }
+  else {
+    result = 0 
+  }
+}
+
+score_key <- function(i,j) {
+  vector_movies <- intersect(matrix_movies2[i,],matrix_movies2[j,])
+  vector_movies <- vector_movies[!is.na(vector_movies)]
+  length(vector_movies)
+}
+
+score_key(3,23)
+
+score_total <- function(i,j) {
+  result = score_key(i,j) + score_genre(i,j)
+}
 
 ```
 
 ```{r}
-# Score for the keywords (to be replaced by the function)
-matrix_movies2 <- as.matrix(movies2)
-keywords_similarity <- intersect(matrix_movies2[8,],matrix_movies2[15,])
-keywords_similarity <- keywords_similarity[!is.na(keywords_similarity)]
-length(keywords_similarity)
-which(movies$original_title == "Avengers: Age of Ultron")
+weight <- function(i,j) {
+  if (i>= j) {
+    result = NA
+  }
+  else {
+    if (score_key(i,j) == 0 | score_key(i,j) == 1) {
+      if (score_genre(i,j) != 0) {
+        result = 100
+      }
+      else {
+        result = 0 }
+    }
+    else {
+    result = 1/(score_total(i,j))
+    }
+  }
+    print(result)
+}
 ```
+
+```{r}
+VecWeight <- Vectorize( weight )
+
+start_time <- Sys.time()
+graph_matrix <- outer(seq(1,1000),seq(1,1000),VecWeight) 
+diag(graph_matrix) = 0 
+end_time <- Sys.time()
+end_time - start_time
+#View(graph_matrix)
+
+movies_used <- movies[1:500,]
+
+library(igraph)
+graph <- graph_from_adjacency_matrix(graph_matrix, mode = c("undirected"), weighted = T)
+plot(graph)
+
+shortest_paths(graph, 3, 20)
+distances(graph,3,48)
+tmdb$original_title[[20]]
+intersect(matrix_movies[3,],matrix_movies[48,])
+intersect(matrix_movies2[1,],matrix_movies2[20,])
+
+```
+
+
+```{r}
+movies_path <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  l <- shortest_paths(graph, i,j)
+  l1 <- l[[1]][[1]]
+  movies_list <- list()
+  for (i in 1:length(l1)){
+    movies_list[[i]] <- tmdb$original_title[l1[i]]
+  }
+  movies_list <- do.call(rbind.data.frame, movies_list)
+  colnames(movies_list) <- c("Pathway from first movie to second movie")
+  print(movies_list)
+  
+}
+
+```
+
+
+```{r}
+similarities_key <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  keywords <- intersect(matrix_movies2[i,],matrix_movies2[j,])
+  keywords <- keywords[!is.na(keywords)]
+  print(paste(keywords))
+  
+  
+}
+similarities_key(c("The Dark Knight Rises","Superman Returns"))
+
+similarities_genre <- function(names) {
+  i <- which(movies2$original_title == names[1])
+  j <- which(movies2$original_title == names[2])
+  genre <- intersect(matrix_movies[i,],matrix_movies[j,])
+  genre <- genre[!is.na(genre)]
+  print(paste(genre))
+  
+  
+}
+similarities_genre(c("The Dark Knight Rises","Superman Returns"))
+```
+
+
+
+```{r}
+# TEST the function shortest_paths
+m <- outer(seq(1,3),seq(1,3),"+")
+diag(m) = 0
+m[2,1] = NA
+m[1,2] = 10
+m[3,1] = 2
+m[1,3] = 2
+m[3,2] = 2
+m[2,3] = 2
+m
+g <- graph_from_adjacency_matrix(m,mode = c("undirected"), weighted = T)
+plot(g)
+library(igraph)
+shortest_paths(g,1,2)
+distances(g,2,1)
+```
+
+
+
 
