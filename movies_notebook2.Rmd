@@ -3,25 +3,41 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-Below we import the different movies data set. 
+
+First, we install and load the librairies needed to create the functions. 
 
 ```{r}
-## PATH TO CHANGE 
-tmdb <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE) # import strings as characters 
-View(tmdb)
+install.packages("igraph")
+install.packages("shinythemes")
+library(dplyr)
+library(tidyr)
+library(igraph)
+```
+
+We used the data set 'tmdb_5000_movies.csv', found on Kaggle, to get a list of movies and characteristics. 
+The code below imports the data set. The path has to be replaced by the one linked to the working directory.
+
+The first step to clean the data set is to remove the movies with no keywords in common with other movies from the data set. 
+
+```{r}
+# PATH TO CHANGE 
+
+tmdb <- read.csv("/Users/path/to/file/tmdb_5000_movies.csv",stringsAsFactors = FALSE) 
 tmdb<-tmdb[-c(382,294,168,345,72,313,318,303,458,84,444,87,493,437,324), ]
 #These rows are deleted due to a lack of keywords with other movies
 
 ```
 
+The columns will the use to create the similarity matrix (adjency matrix for the graph) are 'genres' and 'keywords'. 
+Those columns are not usable in the initial state (factors of length 1), hence, we need to split them into different columns. A cell of a column would only include one genre (or one keyword).
+
 ```{r}
 # GENRES CLEANING CODE 
-library(dplyr)
-library(tidyr)
+
 tmdb1 <- tmdb 
-tmdb1 <- tmdb1 %>% mutate(genres = gsub('"name"', "", genres))
+tmdb1 <- tmdb1 %>% mutate(genres = gsub('"name"', "", genres)) # replace the string "name" by the empty string 
 tmdb1 <- tmdb1 %>% mutate(genres = gsub('"id"', "", genres))
-tmdb1 <- tmdb1 %>% mutate(genres = chartr('}"][}{:1234567890', '                 ', genres))
+tmdb1 <- tmdb1 %>% mutate(genres = chartr('}"][}{:1234567890', '                 ', genres))  
 tmdb1 <- tmdb1 %>% mutate(genres = gsub(" ", "", genres))
 tmdb1 <- tmdb1 %>% separate(genres,into = c("null", "1", "null1", "2", "null2", "3", "null3","4","null4", "5", "null5", "6"),sep = ',' ,remove = TRUE)
 movies <- tmdb1[c(1,3,5,7,9,11,13,18)]
@@ -33,17 +49,11 @@ matrix_movies <- as.matrix(movies)
 
 
 ```{r}
-# Keywords CLEANING CODE 
-## PATH TO CHANGE 
-### Comment : what is the keyword "d" ? 
-### No column with the title ? 
-
 
 # Keywords CLEANING CODE 
 tmp <- c(1:40)
 tmp <- as.character(tmp)
 
-#tmdb2 <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE)
 tmdb2 <- tmdb %>% mutate(keywords = gsub('"name"', "", keywords))
 tmdb2 <- tmdb2 %>% mutate(keywords = gsub('"id"', "", keywords))
 tmdb2 <- tmdb2 %>% mutate(keywords = chartr('}"][}{:1234567890', '                 ', keywords))
@@ -80,8 +90,6 @@ score_key <- function(i,j) {
   length(vector_movies)
 }
 
-score_key(3,23)
-
 score_total <- function(i,j) {
   result = score_key(i,j) + score_genre(i,j)
 }
@@ -111,35 +119,20 @@ weight(20,23)
 ```
 
 ```{r}
-library(igraph)
 
 VecWeight <- Vectorize( weight )
 
 graph_matrix <- outer(seq(1,500),seq(1,500),VecWeight) 
 diag(graph_matrix) = 0 
-#View(graph_matrix)
 
 movies_used <- movies[1:500,]
-
 
 graph <- graph_from_adjacency_matrix(graph_matrix, mode = c("undirected"), weighted = T)
 plot(graph)
 
-shortest_paths(graph, 3, 20)
-distances(graph,3,20)
-tmdb$original_title[[87]]
-intersect(matrix_movies[26,],matrix_movies[4,])
-intersect(matrix_movies2[12,],matrix_movies2[19,])
-
 
 ```
 
-```{r}
-# need to put movies_used in the other functions
-movies_used <- movies[1:500,]
-movies_used <- movies_used[-87,]
-View(movies_used)
-```
 
 ```{r}
 # Runtime 
@@ -151,21 +144,6 @@ end_time - start_time
 
 ```{r}
 
-# Get the movie path as a character 
-
-movies_path <- function(names) {
-  i <- which(movies2$original_title == names[1])
-  j <- which(movies2$original_title == names[2])
-  l <- shortest_paths(graph, i,j)
-  l1 <- l[[1]][[1]]
-  movies_list <- list()
-  for (i in 1:length(l1)){
-    movies_list[[i]] <- tmdb$original_title[l1[i]]
-  }
-  #result = movies_list
-  print(movies_list)
-  
-}
 
 movies_path <- function(names) {
   i <- which(movies2$original_title == names[1])
@@ -177,15 +155,10 @@ movies_path <- function(names) {
     movies_list[[i]] <- tmdb$original_title[l1[i]]
   }
   movies_list <- do.call(rbind.data.frame, movies_list)
-  colnames(movies_list) <- c("Pathway from movie 1 to movie 2")
+  colnames(movies_list) <- c("Pathway from first movie to second movie")
   print(movies_list)
   
 }
-
-
-class(movies_path(c("Avatar","Tangled")))
-movies_path(c("Avatar","Tangled"))
-
 
 
 
@@ -231,9 +204,16 @@ m[2,3] = 2
 m
 g <- graph_from_adjacency_matrix(m,mode = c("undirected"), weighted = T)
 plot(g)
-library(igraph)
 shortest_paths(g,1,2)
 distances(g,2,1)
+```
+
+```{r}
+# Runtime 
+start_time <- Sys.time()
+graph_matrix <- outer(seq(1,500),seq(1,500),VecWeight) 
+end_time <- Sys.time()
+end_time - start_time
 ```
 
 
