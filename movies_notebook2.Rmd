@@ -47,6 +47,8 @@ View(movies)
 matrix_movies <- as.matrix(movies)
 ```
 
+The code bellow cleans the column for the keywords and split the columns into different columns for every keyword.
+
 
 ```{r}
 
@@ -68,6 +70,12 @@ matrix_movies2 <- as.matrix(movies2)
 matrix_movies2[ matrix_movies2 == "d" ] <- NA
 ```
 
+We also create the matrix from the data set to get the length of the intersection for given rows. This length is equal to the number of genres (or keywords) that two movies have in common.
+
+For two given rows, we create three functions : 
+- score_genre gives the number of genres in commmon between two movies, 
+- score_keywords gives the number of keywords in commmon between two movies, 
+- score_total aggregates those two scores. 
 
 
 ```{r}
@@ -96,6 +104,12 @@ score_total <- function(i,j) {
 
 ```
 
+Our goal is to find the path with maximal similarities by finding the path with the minimal weight in a graph. Therefore, the weight function should be the inverse of the score. 
+Moreover, the decide to put an edge between two movies only if they share a keywords. 
+
+Here, we create the weight function between two movies. The smallest the weight is, the more similar two movies are. 
+
+
 ```{r}
 weight <- function(i,j) {
   if (i>= j) {
@@ -103,11 +117,7 @@ weight <- function(i,j) {
   }
   else {
     if (score_key(i,j) == 0) {
-      if (score_genre(i,j) != 0) {
         result = 0
-      }
-      else {
-        result = 0 }
     }
     else {
     result = 1/(score_total(i,j))
@@ -115,7 +125,6 @@ weight <- function(i,j) {
   }
     print(result)
 }
-weight(20,23)
 ```
 
 ```{r}
@@ -190,6 +199,7 @@ similarities_genre(c("The Dark Knight Rises","Superman Returns"))
 
 ```
 
+Here we created a test adjacency matrix (which defines a network) to check whether the shortest path function calculates the path based on the smallest number of edges or the path with the lowest sum of weights. As can be seen when running this chunck it calculates the latter. Vertices 1 & 2 are connected by an edge of weight 10, which constitutes a path of length 1 with weight 10. When implementing the shortes path algorithm though, the output is the path from 1 to 3 and 3 to 2, which has length 2 but weight 2+2=4.
 
 ```{r}
 # TEST the function shortest_paths
@@ -207,6 +217,9 @@ plot(g)
 shortest_paths(g,1,2)
 distances(g,2,1)
 ```
+
+Below we calculated the runtime of creating the adjacency matrix for the graph.
+The original dataset consisted out of 4803 movies, this however resulted in a matrix of almost 25000000 entries, each of which calls the weight function. Due to this the runtime was extremely long. By using this chunch below we searched for the optimal amount of movies with an acceptable runtime. The result was a dataset of 500 movies (with a runtime of roughly 3 minutes) instead of 4803. With a stronger processor one could run the same shiny app on the whole dataset.
 
 ```{r}
 # Runtime 
