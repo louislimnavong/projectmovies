@@ -7,7 +7,7 @@ Below we import the different movies data set.
 
 ```{r}
 ## PATH TO CHANGE 
-tmdb <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE) # import strings as characters 
+tmdb <- read.csv("/Users/Daniel/Documents/Courses X/R/Project/tmdb-5000-movie-dataset/tmdb_5000_movies.csv",stringsAsFactors = FALSE) # import strings as characters
 View(tmdb)
 ```
 
