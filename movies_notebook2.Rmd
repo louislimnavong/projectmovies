@@ -3,6 +3,10 @@ title: "R Notebook"
 output: html_notebook
 ---
 
+The final aim of this project is to find the shortest path between any two movies in our dataset. We think such output is informative because it enables the user to see what movies best connect a pair of his/her favourite movies.
+We first downloaded a movie dataset from kaggle, which we cleaned and prepared for analysis and alterations. Next we built several functions which calculated the intersection of keywords and genres between any two movies in the dataset. From there we made another function to assign to each pair of movies a value, called weight, which is inversely proportional to the amount of similarity (e.g. same keywords/genres) between two movies. We created an adjacency matrix, where entry i,j is the weight of movies i and j,  from which we defined a weighted network. From this network we extracted the shortest path between two movies, meaning the path with the least amount of weight. We put the result of this into a shiny app, which can be found on our github. In the shiny app one can look up the shortest path between two movies and check for each pair of consecutive movies along this path by giving the keywords and genres in common.
+
+PS: When calculating our adjacency matrix, we encounted a running time problem. The approach we used to solve the running time problem can be found above the last chunk. 
 
 First, we install and load the librairies needed to create the functions. 
 
