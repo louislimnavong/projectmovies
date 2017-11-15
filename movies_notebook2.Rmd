@@ -127,14 +127,17 @@ weight <- function(i,j) {
 }
 ```
 
+Given the weight function, we can generate an adjacency matrix to create a graph. 
+Here, we vectorize the weight function to use the outer function that creates the adjacency matrix (which defines our graph). We also need to assign 0 to the diagonal so that vertices do not have self edges. 
+
+
 ```{r}
 
 VecWeight <- Vectorize( weight )
 
 graph_matrix <- outer(seq(1,500),seq(1,500),VecWeight) 
 diag(graph_matrix) = 0 
-
-movies_used <- movies[1:500,]
+movies_used <- movies[1:500,] 
 
 graph <- graph_from_adjacency_matrix(graph_matrix, mode = c("undirected"), weighted = T)
 plot(graph)
@@ -142,14 +145,7 @@ plot(graph)
 
 ```
 
-
-```{r}
-# Runtime 
-start_time <- Sys.time()
-graph_matrix <- outer(seq(1,200),seq(1,200),VecWeight) 
-end_time <- Sys.time()
-end_time - start_time
-```
+Given two names of movies, this function calculates the shortest path between them and converts the output into a dataframe (for shiny app compatibility)
 
 ```{r}
 
@@ -172,6 +168,8 @@ movies_path <- function(names) {
 
 
 ```
+
+Given two movies, this chunk outputs the genres and the keywords they have in common.
 
 ```{r}
 
